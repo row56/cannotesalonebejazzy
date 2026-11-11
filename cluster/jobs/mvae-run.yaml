@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mvae-run
+  labels:
+    app: mvae-run
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels:
+        app: mvae-run
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        gpu: a100
+      volumes:
+      - name: mvae-rwx
+        persistentVolumeClaim:
+          claimName: mvae-rwx
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: "16Gi"
+      containers:
+      - name: mvae-run
+        image: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "16"
+            memory: 64Gi
+            nvidia.com/gpu: 1
+          limits:
+            memory: 64Gi
+            nvidia.com/gpu: 1
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: EXPERIMENT
+          value: ""
+        volumeMounts:
+        - name: mvae-rwx
+          mountPath: /storage
+        - name: dshm
+          mountPath: /dev/shm
+        command: ["bash", "-lc"]
+        args:
+        - |
+          set -euo pipefail
+          source /storage/venv/bin/activate
+          cd /storage/melodic-vae
+          python src/scripts/pipelines/spatial/gp_eval.py --experiment "$EXPERIMENT"

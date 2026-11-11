@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mvae
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mvae
+  template:
+    metadata:
+      labels:
+        app: mvae
+    spec:
+      containers:
+      - name: mvae
+        image: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 0
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: VSCODE_AGENT_FOLDER
+          value: /storage/vscode-agent
+        - name: JUPYTER_PATH
+          value: /storage/jupyter
+        - name: GIT_CONFIG_GLOBAL
+          value: /storage/.gitconfig
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/sh
+                - -lc
+                - |
+                  mkdir -p /storage/vscode-agent
+                  rm -rf /root/.vscode-server
+                  ln -s /storage/vscode-agent /root/.vscode-server
+                  mkdir -p /storage/jupyter
+                  mkdir -p /root/.local/share
+                  rm -rf /root/.local/share/jupyter
+                  ln -s /storage/jupyter /root/.local/share/jupyter
+        ports:
+        - containerPort: 22
+        resources:
+          requests:
+            cpu: "4"
+            memory: 16Gi
+          limits:
+            cpu: "4"
+            memory: 16Gi
+        volumeMounts:
+        - name: mvae-rwx
+          mountPath: /storage
+        - name: ssh-key
+          mountPath: /root/.ssh/authorized_keys
+          subPath: authorized_keys
+          readOnly: true
+        - name: dshm
+          mountPath: /dev/shm
+      volumes:
+      - name: mvae-rwx
+        persistentVolumeClaim:
+          claimName: mvae-rwx
+      - name: ssh-key
+        secret:
+          secretName: mvae-ssh-key
+          defaultMode: 0600
+      - name: dshm
+        emptyDir:
+          medium: Memory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mvae-ssh
+spec:
+  type: ClusterIP
+  selector:
+    app: mvae
+  ports:
+  - name: ssh
+    port: 22
+    targetPort: 22

@@ -1,0 +1,61 @@
+{
+  "sigma": 1.156734824180603,
+  "targets_sd": {
+    "classical": -0.6669471355128798,
+    "jazz": 0.6669471870412366
+  },
+  "bpm": 80,
+  "bars": 2,
+  "temperature": 0.9,
+  "top_p": 0.98,
+  "candidates": 200,
+  "seeds": [
+    {
+      "id": "seed00",
+      "index": 1303,
+      "side": "classical",
+      "source_file": "lieder/Brahms,_Johannes/9_Lieder_und_Ges\u00e4nge,_Op.63/9_Heimweh_III/lc5940230.mxl",
+      "start_sd": -1.407362732322038,
+      "clips": {
+        "classical": {
+          "file": "seed00/classical.mid",
+          "shift_sd": 0.740415596809158,
+          "descriptors": {
+            "note_density": 0.5,
+            "pitch_range": 5.0,
+            "mean_interval": 1.8,
+            "rest_ratio": 0.125,
+            "syncopation": 0.625,
+            "chromaticism": 0.125,
+            "pc_entropy": 2.1085,
+            "beat_vacancy": 0.25,
+            "lhl_syncopation": 0.3125
+          }
+        },
+        "jazz": {
+          "file": "seed00/jazz.mid",
+          "shift_sd": 2.0743099193632744,
+          "descriptors": {
+            "note_density": 0.5,
+            "pitch_range": 5.0,
+            "mean_interval": 1.8,
+            "rest_ratio": 0.1562,
+            "syncopation": 0.75,
+            "chromaticism": 0.125,
+            "pc_entropy": 2.0218,
+            "beat_vacancy": 0.5,
+            "lhl_syncopation": 0.4375
+          }
+        }
+      },
+      "notes": {
+        "target": 16,
+        "achieved": [
+          16,
+          16
+        ]
+      },
+      "density_matched": true
+    }
+  ]
+}

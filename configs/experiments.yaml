@@ -1,0 +1,1070 @@
+pilot:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/pilot
+    data: /storage/data/processed/train_v2.npz
+    epochs: 6
+    kl_warmup_steps: 2000
+  note: >
+    go/no-go before spending a GPU night. Same architecture as base so the
+    result transfers, just 6 epochs with a short KL warmup so beta actually
+    reaches max. Run axes_pilot after it and look at the genre AUC.
+
+axes_pilot:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/pilot/best.pt
+    --data /storage/data/processed/train_v2.npz
+    --out /storage/runs/pilot/axes
+    --field genre
+  note: does a jazziness axis separate at all? if not, stop and rethink
+
+axes_pilot_corpus:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/pilot/best.pt
+    --data /storage/data/processed/train_v2.npz
+    --out /storage/runs/pilot/axes_corpus
+    --field corpus
+  note: >
+    confound check. corpus AUC close to genre AUC means the axis may be
+    reading the transcriber rather than the music
+
+base:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/base
+    data: /storage/data/processed/train_v2.npz
+  note: single run, default hyperparameters
+
+base_v3:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/base_v3
+    data: /storage/data/processed/train_v3.npz
+  note: >
+    same hyperparameters as base, on the v3 corpus that adds MAESTRO. v2 had
+    classical == giantmidi and jazz == pijama, so genre and corpus were the
+    same split and the confound check could not say anything. v3 gives
+    classical a second, non-transcribed source.
+
+axes_v3_heldout:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v3.npz
+    --out /storage/runs/base_v3/axes_heldout
+    --field genre
+    --fit-exclude corpus:maestro
+  note: >
+    the confound test. Fit the genre axes on giantmidi vs pijama only, then
+    ask where MAESTRO lands. Classical-axis AUC near 0.5 against giantmidi and
+    well above 0.5 against pijama means the axis reads music, not the
+    transcriber. Near 0.5 against pijama means it was a pipeline fingerprint.
+
+axes_v4_heldout_jazz:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_heldout_jazz
+    --field genre
+    --fit-exclude corpus:wjazzd
+  note: >
+    the jazz-side counterpart to axes_v3_heldout. v4 is v3 plus the Weimar Jazz
+    Database, 456 solos transcribed by hand rather than by Kong's model. The
+    checkpoint is still base_v3, so wjazzd is unseen by the encoder as well as
+    excluded from the fit. Jazz-axis AUC near 0.5 against pijama and well above
+    0.5 against the classical corpora means the jazz axis reads music.
+
+axes_v4_heldout_both:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_heldout_both
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+  note: >
+    the clean symmetric test. Axes fit on the two Kong-transcribed corpora
+    only, then both hand-made corpora are projected. If maestro and wjazzd are
+    each displaced in the same direction, that displacement is the transcriber
+    and the genre separation surviving it is the real effect.
+
+axes_v4_heldout_classical:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_heldout_classical
+    --field genre
+    --fit-exclude corpus:maestro
+  note: >
+    matched baseline for axes_v4_deconf_maestro. Same data and same fit
+    composition, minus the projection, so the two numbers differ only by the
+    correction.
+
+axes_v4_deconf_wjazzd:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_deconf_wjazzd
+    --field genre
+    --fit-exclude corpus:wjazzd
+    --project-out corpus:giantmidi:maestro
+  note: >
+    deconfounding, leave-one-genre-out. The transcriber direction is estimated
+    inside classical (Kong's giantmidi against hand-played maestro), where it
+    cannot be genre, then removed from every latent. wjazzd is the test set and
+    contributes nothing to the correction. Compare the jazz-axis cell against
+    axes_v4_heldout_jazz: 0.624 is the uncorrected number.
+
+axes_v4_deconf_maestro:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_deconf_maestro
+    --field genre
+    --fit-exclude corpus:maestro
+    --project-out corpus:pijama:wjazzd
+  note: >
+    the mirror image: transcriber direction estimated inside jazz, maestro held
+    out and tested. Read against axes_v4_heldout_classical. If both directions
+    improve, the confound was provenance; if neither moves, the genre signal is
+    not in this latent space and the training setup is what needs changing.
+
+adv_v3:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/adv_v3
+    data: /storage/data/processed/train_v3.npz
+    adv_lambda: 0.3
+    adv_field: corpus
+  note: >
+    base_v3 plus a corpus adversary. Same data, same hyperparameters, so the
+    only difference from base_v3 is the gradient-reversal term. Trains on the
+    three v3 corpora; wjazzd stays unseen so the v4 held-out tests still mean
+    something. Read val_adv_bacc against adv_chance (0.33) and val_recon
+    against base_v3: if provenance drops but reconstruction collapses, the
+    lambda is too high.
+
+adv_v3_l1:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/adv_v3_l1
+    data: /storage/data/processed/train_v3.npz
+    adv_lambda: 1.0
+    adv_field: corpus
+  note: >
+    stronger adversary, for the lambda pair. Run only if adv_v3 leaves
+    val_adv_bacc well above chance.
+
+axes_adv_v3_heldout:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/adv_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/adv_v3/axes_heldout_both
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+  note: >
+    the rerun that decides it. Identical to axes_v4_heldout_both except for the
+    checkpoint, so the two tables differ only by the adversary. Genre AUC
+    holding up on the held-out corpora is the result; falling back to 0.5 says
+    the axes were provenance all along and the paper is the diagnosis.
+
+axes_adv_v3_corpus:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/adv_v3/best.pt
+    --data /storage/data/processed/train_v3.npz
+    --out /storage/runs/adv_v3/axes_corpus
+    --field corpus
+  note: >
+    did the adversary actually work? Fresh probe on frozen latents, read
+    against axes_v3_corpus. The in-training val_adv_bacc is the adversary
+    grading itself; this is the independent check.
+
+axes_v3:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v3.npz
+    --out /storage/runs/base_v3/axes
+    --field genre
+  note: in-sample genre axes on v3, the baseline the held-out run is read against
+
+axes_v3_corpus:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v3.npz
+    --out /storage/runs/base_v3/axes_corpus
+    --field corpus
+  note: >
+    now meaningful: three corpora, two of them the same genre. giantmidi vs
+    maestro separability is how much provenance the latent space carries.
+
+beta_005:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/beta005
+    data: /storage/data/processed/train_v2.npz
+    max_beta: 0.05
+  note: beta sweep low
+
+beta_02:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/beta02
+    data: /storage/data/processed/train_v2.npz
+    max_beta: 0.2
+  note: beta sweep mid (same as base)
+
+beta_05:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/beta05
+    data: /storage/data/processed/train_v2.npz
+    max_beta: 0.5
+  note: beta sweep high
+
+prod_seeds:
+  seeds: "42-46"
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/prod_ss{ss}
+    data: /storage/data/processed/train_v2.npz
+    seed: "{ss}"
+  note: five seeds at the chosen beta, for the disentanglement numbers
+
+long_windows:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/long128
+    data: /storage/data/processed/train_128.npz
+    batch_size: 128
+  note: needs a 128-token preprocess run first
+
+axes_base:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base/best.pt
+    --data /storage/data/processed/train_v2.npz
+    --out /storage/runs/base/axes
+    --field genre
+  note: post-hoc axis fit on the base run
+
+axes_corpus_check:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base/best.pt
+    --data /storage/data/processed/train_v2.npz
+    --out /storage/runs/base/axes_corpus
+    --field corpus
+  note: confound check, corpus separability next to genre
+
+axes_setting_check:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base/best.pt
+    --data /storage/data/processed/train_v2.npz
+    --out /storage/runs/base/axes_setting
+    --field setting
+  note: confound check, live vs studio
+
+steer_demo:
+  command: >
+    python scripts/steer.py
+    --ckpt /storage/runs/base/best.pt
+    --styles /storage/runs/base/axes/styles.npz
+    --data /storage/data/processed/train_v2.npz
+    --out /storage/runs/base/demos
+    --mode transfer --source classical --target jazz
+  note: cross-genre steering demo
+
+axes_v4_heldout_both_nodensity:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_heldout_both_nodensity
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+    --project-out-attr note_density
+  note: >
+    the density control. Identical to axes_v4_heldout_both except the
+    note_density regression direction is removed from every latent first,
+    estimated on the retained windows only. If wjazzd still reaches ~0.645 on
+    the jazz side the axis carries more than density; if it falls to ~0.5 the
+    axis was density all along and maestro's 0.511 was the same effect.
+
+axes_v4_heldout_both_nodesc:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_heldout_both_nodesc
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+    --project-out-attr note_density pitch_range mean_interval rest_ratio
+    syncopation chromaticism pc_entropy
+  note: >
+    the strong control. Removes all seven descriptor directions before fitting,
+    not just density. If separability and both held-out transfers survive near
+    0.6 the genre axis is not reducible to any hand-crafted feature; if they
+    collapse to 0.5 the axis was a descriptor blend all along.
+
+demo_nodesc:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both_nodesc/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_nodesc
+    --per-side 10 --alphas -2 -1 0 1 2
+  note: >
+    listening stimuli on the purified axis. 20 seeds across five slider
+    positions. SUPERSEDED: as of 2026-09-13 the paper reports the RAW axis
+    (fit on a note-count-matched subset); the purified axis is a control only.
+
+demo_raw:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw
+    --per-side 10 --alphas -2 -1 0 1 2
+  note: >
+    same seeds and alphas on the unpurified axis, as the audible control. If
+    listeners hear jazziness here but not in demo_nodesc, the percept was
+    riding on the descriptors.
+
+demo_nodesc_v2:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both_nodesc/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_nodesc_v2
+    --per-side 10 --alphas -2 -1 0 1 2
+    --bars 2 --bpm 80 --temperature 0.7 --top-p 0.92 --key-bias 2.5
+    --register-span 12 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    demo_nodesc again with listenable stimuli. The v1 clips were 4 bars and
+    sampled from the full distribution at T=0.9, which sounded atonal. Two bars,
+    nucleus sampling and a soft penalty on notes outside the seed's own scale.
+    The penalty is deliberately finite: a hard key mask would delete
+    chromaticism, which is part of what the axis is supposed to move.
+
+demo_raw_v2:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v2
+    --per-side 10 --alphas -2 -1 0 1 2
+    --bars 2 --bpm 80 --temperature 0.7 --top-p 0.92 --key-bias 2.5
+    --register-span 12 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    the unpurified control under the same v2 sampling settings, so the two sets
+    stay comparable.
+
+demo_nodesc_v3:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both_nodesc/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_nodesc_v3
+    --per-side 10 --alphas -3 -2 -1 0 1 2 3
+    --bars 1 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 2.5
+    --register-span 12 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    demo_nodesc_v2 shortened to one bar and slowed to 60 bpm, so each clip is
+    4.0s instead of 6.0s and every note lasts longer. Same seeds, same axis,
+    same sampling; only clip length and tempo change.
+
+demo_raw_v3:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v3
+    --per-side 10 --alphas -3 -2 -1 0 1 2 3
+    --bars 1 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 2.5
+    --register-span 12 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    the unpurified control at the same one-bar, 60 bpm settings.
+
+demo_nodesc_v4:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both_nodesc/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_nodesc_v4
+    --per-side 10 --alphas -3 -2 -1 0 1 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 1.0
+    --register-span 12 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    v3 measured 1.6% out-of-key notes at alpha 0, roughly two accidentals across
+    the whole set, because one bar leaves ~6 notes and key-bias 2.5 removes the
+    rest. Back to two bars for room and key-bias 1.0 so a chromatic note costs
+    something but stays reachable. 60 bpm kept, so 8.0s per clip.
+
+demo_raw_v4:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v4
+    --per-side 10 --alphas -3 -2 -1 0 1 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 1.0
+    --register-span 12 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    the unpurified control at the same v4 settings.
+
+demo_raw_v5:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v5
+    --per-side 10 --alphas -3 -2 -1 0 1 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    both sampling constraints off. The axis report says the raw axis carries
+    note_density 0.42, pitch_range 0.33, chromaticism 0.26, pc_entropy 0.28 and
+    syncopation 0.01. register-span 12 was masking pitch_range and key-bias was
+    suppressing chromaticism, so v4 could only express density. This is the
+    upper bound on what the raw axis sounds like.
+
+demo_probe_wide:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_probe_wide
+    --per-side 3 --alphas -1000 -100 -10 -3 0 3 10 100 1000
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+  note: >
+    how far can the slider go before the decoder stops producing music. 6 seeds
+    only, this is a diagnostic not a stimulus set. sigma is ~0.99 and a typical
+    latent norm is ~11, so alpha 10 already moves z further than its own length
+    and 100 and 1000 are far outside anything the decoder saw.
+
+demo_raw_v6:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v6
+    --per-side 10 --alphas -1 0 1
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+  note: >
+    the discrimination condition. v5 at +-3 was called immediately, so this is
+    the same unconstrained sampling at +-1 only, where the test is informative.
+    Seeds also pass the new melodicity filter: the piano corpora come through
+    skyline(), and a window with a 6-8 semitone average step and a quarter of
+    its intervals above a fifth is the top of an accompaniment, not a tune.
+    Hand-transcribed wjazzd sits at 2.75 and 0.042 on those two numbers.
+
+demo_raw_v7:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v7
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+  note: >
+    v6 settings and v6 seeds, widened back out. +-1 was at or below chance by
+    ear, +-3 was immediate before the melodicity filter was added, so this
+    brackets the threshold: same 20 filtered seeds at +-2 and +-3 with 0 as the
+    anchor.
+
+demo_raw_v8:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v8
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+    --match-candidates 24 --match-tol 3
+  note: >
+    the density-matched condition, to be reported alongside v7 rather than
+    instead of it. v7 moves note count from 6.8 at -3 to 18.4 at +3, so a
+    listener can win a forced choice by counting notes. Here each slider
+    position is drawn 24 times and the draw closest to the seed's own onset
+    count is kept, so the axis is unchanged and only the sampled realisation is
+    controlled. If the percept survives this, it is not density.
+
+axes_v4_heldout_both_melodic:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_heldout_both_melodic
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+    --max-mean-interval 4 --max-leap-rate 0.10
+  note: >
+    axes_v4_heldout_both on real melodies only. The demo seed filter showed
+    77-89% of piano windows are skyline tops of accompaniment while wjazzd
+    passes 87%, so "real melody or not" separates the held-out jazz corpus from
+    the fit corpora. Same checkpoint, so the latent map still saw every window;
+    this only redraws the axis. The clean version needs a retrain.
+
+axes_v4_heldout_both_nodesc_melodic:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/axes_heldout_both_nodesc_melodic
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+    --project-out-attr note_density pitch_range mean_interval rest_ratio
+    syncopation chromaticism pc_entropy
+    --max-mean-interval 4 --max-leap-rate 0.10
+  note: >
+    the purified axis on real melodies only, the counterpart of
+    axes_v4_heldout_both_nodesc.
+
+filter_v3_melodic:
+  command: >
+    python scripts/filter_melodic.py /storage/data/processed/train_v3.npz
+    --out /storage/data/processed/train_v3_melodic.npz
+    --max-mean-interval 4 --max-leap-rate 0.10
+  note: >
+    train_v3 with skyline accompaniment tops removed. Built from v3, not v4, so
+    wjazzd stays unseen by the retrained model.
+
+base_v3_melodic:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/base_v3_melodic
+    data: /storage/data/processed/train_v3_melodic.npz
+  note: >
+    base_v3 retrained on real melodies only, same hyperparameters. The clean
+    version of axes_v4_heldout_both_melodic: here the latent map itself never
+    saw an accompaniment window.
+
+axes_melodic_heldout_both:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3_melodic/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3_melodic/axes_heldout_both
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+    --max-mean-interval 4 --max-leap-rate 0.10
+  note: >
+    raw axis on the retrained model, real melodies only in training, fit and
+    held-out scoring.
+
+axes_melodic_heldout_both_nodesc:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v3_melodic/best.pt
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3_melodic/axes_heldout_both_nodesc
+    --field genre
+    --fit-exclude corpus:wjazzd corpus:maestro
+    --project-out-attr note_density pitch_range mean_interval rest_ratio
+    syncopation chromaticism pc_entropy
+    --max-mean-interval 4 --max-leap-rate 0.10
+  note: >
+    purified axis on the retrained model, real melodies only throughout.
+
+demo_raw_v8_melodic:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both_melodic/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_raw_v8_melodic
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+    --match-candidates 24 --match-tol 3
+  note: >
+    demo_raw_v8 with the raw axis refit on real melodies only (step 1).
+
+demo_nodesc_v8_melodic:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both_nodesc_melodic/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_nodesc_v8_melodic
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+    --match-candidates 24 --match-tol 3
+  note: >
+    demo_nodesc_v8 with the purified axis refit on real melodies only (step 1).
+
+demo_raw_v9:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3_melodic/best.pt
+    --styles /storage/runs/base_v3_melodic/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3_melodic/demos_raw_v9
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+    --match-candidates 24 --match-tol 3
+  note: >
+    v8 settings on the retrained real-melodies model (step 2), raw axis. The
+    model, the axis and the seeds have all only seen melodic windows.
+
+demo_nodesc_v9:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3_melodic/best.pt
+    --styles /storage/runs/base_v3_melodic/axes_heldout_both_nodesc/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3_melodic/demos_nodesc_v9
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+    --match-candidates 24 --match-tol 3
+  note: >
+    v8 settings on the retrained real-melodies model (step 2), purified axis.
+
+demo_nodesc_v8:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both_nodesc/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --out /storage/runs/base_v3/demos_nodesc_v8
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 60 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 0 --max-seed-range 14
+    --max-seed-chromaticism 0.12
+    --max-seed-mean-interval 4 --max-seed-leap-rate 0.10
+    --match-candidates 24 --match-tol 3
+  note: >
+    demo_raw_v8 with the purified axis swapped in, everything else identical,
+    so the two sets differ only in which axis the slider moves along. Tests
+    whether the purified axis is still audible. Since 2026-09-13 the paper
+    reports the raw axis, so this is the control arm, not the main condition.
+
+density_overlap:
+  command: >
+    python scripts/density_overlap.py
+    --ckpt /storage/runs/base_v3/best.pt
+    --styles /storage/runs/base_v3/axes_heldout_both/styles.npz
+    --data /storage/data/processed/train_v4.npz
+    --draws 200 --seeds 6
+  note: >
+    diagnostic for why demo_raw_v8 could not density-match. If the onset-count
+    sd within one slider position is small next to the gap between positions,
+    no amount of resampling will equalise density and the control has to happen
+    elsewhere.
+
+base_v5:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/base_v5
+    data: /storage/data/processed/train_v5.npz
+    epochs: 200
+    kl_warmup_steps: 3000
+  note: >
+    first model on real beats. WJazzD solos placed on their tapped beats from the
+    database, OpenScore Lieder vocal lines read from the score (4/4, 2/4, 2/2),
+    both key-normalised and octave-centred. Jazz is capped per artist and
+    density-matched to Lieder, 12,688 windows. The data is ~35x smaller than v4,
+    so more epochs and a shorter KL warmup, or beta never reaches max.
+
+base_v5_full:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/base_v5_full
+    data: /storage/data/processed/train_v5_full.npz
+    epochs: 200
+    kl_warmup_steps: 3000
+  note: >
+    base_v5 without density matching, every capped jazz window kept (21.9k).
+    More jazz vocabulary for the decoder; density is then handled only by the
+    descriptor projection at axis-fit time. Read against base_v5.
+
+axes_v5:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v5/best.pt
+    --data /storage/data/processed/train_v5.npz
+    --out /storage/runs/base_v5/axes
+    --field genre
+  note: raw genre axis on the real-beat model
+
+axes_v5_nodesc:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v5/best.pt
+    --data /storage/data/processed/train_v5.npz
+    --out /storage/runs/base_v5/axes_nodesc
+    --field genre
+    --project-out-attr note_density pitch_range mean_interval rest_ratio
+    syncopation chromaticism pc_entropy
+  note: purified genre axis on the real-beat model; syncopation is now measured on real beats
+
+axes_v5_full:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v5_full/best.pt
+    --data /storage/data/processed/train_v5_full.npz
+    --out /storage/runs/base_v5_full/axes
+    --field genre
+  note: raw genre axis, unmatched-density model
+
+axes_v5_full_nodesc:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v5_full/best.pt
+    --data /storage/data/processed/train_v5_full.npz
+    --out /storage/runs/base_v5_full/axes_nodesc
+    --field genre
+    --project-out-attr note_density pitch_range mean_interval rest_ratio
+    syncopation chromaticism pc_entropy
+  note: purified genre axis, unmatched-density model
+
+demo_raw_v10:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v5/best.pt
+    --styles /storage/runs/base_v5/axes/styles.npz
+    --data /storage/data/processed/train_v5.npz
+    --out /storage/runs/base_v5/demos_raw_v10
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 24 --match-tol 3
+  note: >
+    first stimuli on real beats. One-octave decode window (register-span 12) and
+    seeds that already fit in an octave. No melodicity seed filter: every window
+    is a real melody now, not a skyline.
+
+demo_nodesc_v10:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v5/best.pt
+    --styles /storage/runs/base_v5/axes_nodesc/styles.npz
+    --data /storage/data/processed/train_v5.npz
+    --out /storage/runs/base_v5/demos_nodesc_v10
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 24 --match-tol 3
+  note: demo_raw_v10 on the purified axis
+
+demo_raw_v10_full:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v5_full/best.pt
+    --styles /storage/runs/base_v5_full/axes/styles.npz
+    --data /storage/data/processed/train_v5_full.npz
+    --out /storage/runs/base_v5_full/demos_raw_v10
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 24 --match-tol 3
+  note: demo_raw_v10 on the unmatched-density model
+
+demo_nodesc_v10_full:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v5_full/best.pt
+    --styles /storage/runs/base_v5_full/axes_nodesc/styles.npz
+    --data /storage/data/processed/train_v5_full.npz
+    --out /storage/runs/base_v5_full/demos_nodesc_v10
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 24 --match-tol 3
+  note: demo_nodesc_v10 on the unmatched-density model
+
+axes_v5_heldout:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v5/best.pt
+    --data /storage/data/processed/eval_v5.npz
+    --out /storage/runs/base_v5/axes_heldout
+    --field genre
+    --fit-exclude corpus:quartets corpus:asap corpus:jtd
+  note: >
+    the genre x format test. Raw axis fit on wjazzd vs lieder only (the model
+    trained on those alone), then three unseen corpora projected: quartets
+    (classical, sheet music), asap (classical, performances on annotated beats),
+    jtd (jazz, piano transcribed from audio on tracked beats). If placement
+    follows genre, the axis is jazz; if it follows format, it is notation vs
+    transcription. The fourth cell, jazz from sheet music, waits on JAZZMUS.
+
+axes_v5_full_heldout:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v5_full/best.pt
+    --data /storage/data/processed/eval_v5_full.npz
+    --out /storage/runs/base_v5_full/axes_heldout
+    --field genre
+    --fit-exclude corpus:quartets corpus:asap corpus:jtd
+  note: axes_v5_heldout on the unmatched-density model
+
+base_v6:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/base_v6
+    data: /storage/data/processed/train_v6.npz
+    epochs: 200
+    kl_warmup_steps: 3000
+  note: >
+    genre x format balanced. Jazz = pdmx_jazz (sheet) + jtd (piano performance on
+    tracked beats); classical = lieder (sheet) + asap (piano performance on
+    annotated beats). Every cell subsampled to the smallest, both performance
+    corpora through the same skyline + melodic filter, jtd split by pianist and
+    asap by composer. wjazzd is held out. Fixes the v5 confound where genre and
+    format were the same variable.
+
+axes_v6_heldout:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --data /storage/data/processed/eval_v6.npz
+    --out /storage/runs/base_v6/axes_heldout
+    --field genre
+    --fit-exclude corpus:jtd_test corpus:asap_test corpus:pdmx_jazz_test corpus:quartets corpus:wjazzd
+  note: >
+    raw axis fit on the four balanced training cells, then every held-out corpus
+    projected: unseen pianists (jtd_test), unseen composers (asap_test), unseen
+    tunes (pdmx_jazz_test), quartets (unseen classical sheet repertoire) and
+    wjazzd (monophonic solo transcriptions, a format neither side trained on).
+
+demo_raw_v11:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --styles /storage/runs/base_v6/axes_heldout/styles.npz
+    --data /storage/data/processed/train_v6.npz
+    --out /storage/runs/base_v6/demos_raw_v11
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.7 --top-p 0.92 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 24 --match-tol 3
+  note: stimuli on the format-balanced model, raw axis, one octave, 80 bpm
+
+base_v7:
+  base: configs/base.yaml
+  script: scripts/train.py
+  overrides:
+    out_dir: /storage/runs/base_v7
+    data: /storage/data/processed/train_v7.npz
+    epochs: 300
+    kl_warmup_steps: 3000
+  note: >
+    base_v6 with every training cell density-matched (same onset-count
+    histogram). v6's axis was mostly "fewer notes, more rests" because asap top
+    voices are ~3x denser than everything else. Smaller data, so more epochs.
+
+axes_v6_dm_heldout:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --data /storage/data/processed/eval_v7.npz
+    --out /storage/runs/base_v6/axes_dm_heldout
+    --field genre
+    --fit-exclude corpus:jtd_test corpus:asap_test corpus:pdmx_jazz_test corpus:quartets corpus:wjazzd
+  note: >
+    the cheap version of the density fix: same v6 model, axis refit on the
+    density-matched training cells only. Model keeps all its data; only the
+    direction changes. Read against axes_v7_heldout.
+
+axes_v7_heldout:
+  command: >
+    python scripts/analyse_axes.py
+    --ckpt /storage/runs/base_v7/best.pt
+    --data /storage/data/processed/eval_v7.npz
+    --out /storage/runs/base_v7/axes_heldout
+    --field genre
+    --fit-exclude corpus:jtd_test corpus:asap_test corpus:pdmx_jazz_test corpus:quartets corpus:wjazzd
+  note: held-out genre x format test on the density-matched model
+
+demo_raw_v12_v6dm:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --styles /storage/runs/base_v6/axes_dm_heldout/styles.npz
+    --data /storage/data/processed/train_v7.npz
+    --out /storage/runs/base_v6/demos_raw_v12
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.9 --top-p 0.98 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 24 --match-tol 3
+  note: >
+    density-matched axis on the v6 model, looser sampling (T 0.9, top-p 0.98)
+    so low-probability chromatic notes can survive. Seeds from the matched cells.
+
+demo_raw_v12_v7:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v7/best.pt
+    --styles /storage/runs/base_v7/axes_heldout/styles.npz
+    --data /storage/data/processed/train_v7.npz
+    --out /storage/runs/base_v7/demos_raw_v12
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.9 --top-p 0.98 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 24 --match-tol 3
+  note: demo_raw_v12_v6dm on the density-matched model
+
+demo_raw_v13:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --styles /storage/runs/base_v6/axes_dm_heldout/styles.npz
+    --data /storage/data/processed/train_v7.npz
+    --out /storage/runs/base_v6/demos_raw_v13
+    --per-side 10 --alphas -3 -2 0 2 3
+    --bars 2 --bpm 80 --temperature 0.9 --top-p 0.98 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 96 --match-tol 1
+  note: >
+    demo_raw_v12_v6dm with stricter density matching (96 draws per slider
+    position, tolerance 1 note) for the blind self-test. v12 left the jazzier
+    clip denser in 15/20 same-melody -3/+3 pairs, a countable cue.
+
+demo_selftest_matched:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --styles /storage/runs/base_v6/axes_dm_heldout/styles.npz
+    --data /storage/data/processed/train_v7.npz
+    --out /storage/runs/base_v6/demos_selftest_matched
+    --per-side 40 --alphas -3 3 --seed 7
+    --bars 2 --bpm 80 --temperature 0.9 --top-p 0.98 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+    --match-candidates 96 --match-tol 1
+  note: >
+    source of equal-note-count -3/+3 pairs for Robert's second self-test. 80
+    melodies, new rng seed so they are not the ones he already heard.
+
+demo_selftest_free:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --styles /storage/runs/base_v6/axes_dm_heldout/styles.npz
+    --data /storage/data/processed/train_v7.npz
+    --out /storage/runs/base_v6/demos_selftest_free
+    --per-side 40 --alphas -3 3 --seed 11
+    --bars 2 --bpm 80 --temperature 0.9 --top-p 0.98 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+  note: >
+    unmatched draws, source of the pairs where the jazzier clip has fewer (or
+    more) notes, which strict matching almost never produces.
+
+demo_selftest_free2:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --styles /storage/runs/base_v6/axes_dm_heldout/styles.npz
+    --data /storage/data/processed/train_v7.npz
+    --out /storage/runs/base_v6/demos_selftest_free2
+    --per-side 100 --alphas -3 3 --seed 23
+    --bars 2 --bpm 80 --temperature 0.9 --top-p 0.98 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+  note: >
+    more unmatched draws: at +3 the model rarely produces fewer notes, and 80
+    melodies gave only one jazzier-fewer pair of 2+ notes.
+
+demo_selftest_free3:
+  command: >
+    python scripts/build_demo.py
+    --ckpt /storage/runs/base_v6/best.pt
+    --styles /storage/runs/base_v6/axes_dm_heldout/styles.npz
+    --data /storage/data/processed/train_v6.npz
+    --out /storage/runs/base_v6/demos_selftest_free3
+    --per-side 100 --alphas -3 3 --seed 23
+    --bars 2 --bpm 80 --temperature 0.9 --top-p 0.98 --key-bias 0
+    --register-span 12 --max-seed-range 12
+    --max-seed-chromaticism 0.12
+  note: >
+    demo_selftest_free2 failed: train_v7's jazz pool is smaller than 100 eligible
+    seeds. Same draws seeded from train_v6 (the model's own training set).
+
+tonic_check:
+  command: >
+    python scripts/tonic_check.py
+    --data data/processed/train_v6.npz
+  note: >
+    runs locally, no checkpoint needed. Key normalisation transposes each window
+    to its estimated tonic, but the estimator is mode-agnostic and abstains on
+    ambiguous windows, so a residual tonic distribution survives. Produces the
+    paper's total variation distance 0.062 between the genres' tonic histograms,
+    i.e. at most 53.1% balanced accuracy from the tonic alone. On train_v7 (the
+    density-matched axis-fit subset) it is 0.058 / 52.9%.

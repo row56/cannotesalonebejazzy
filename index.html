@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can Notes Alone Be Jazzy? audio examples</title>
+<style>
+body { font-family: sans-serif; max-width: 900px; margin: 30px auto; padding: 0 15px; line-height: 1.4; }
+table { border-collapse: collapse; margin-bottom: 20px; }
+td, th { padding: 4px 10px 4px 0; text-align: left; vertical-align: middle; }
+audio { height: 32px; }
+img { max-width: 100%; }
+</style>
+</head>
+<body>
+
+<h1>Can Notes Alone Be Jazzy? - audio examples</h1>
+<p>Robert Wienroeder, ISMIR 2026 late breaking demo. <a href="Wienroeder_CanNotesAloneBeJazzy.pdf">paper</a> | <a href="https://github.com/row56/cannotesalonebejazzy">code</a></p>
+<p>all clips are monophonic, straight 16ths, 80 bpm, with a 4 beat count in. numbers are standard deviations along the axis.</p>
+
+<h2>1. Jingle Bells, jazz axis</h2>
+<table>
+<tr><td>original</td><td><audio controls preload="none" src="audio/jingle_bells_original.mp3?v=3"></audio></td></tr>
+<tr><td>-3 (classical)</td><td><audio controls preload="none" src="audio/jingle_bells_am3p0.mp3?v=3"></audio></td></tr>
+<tr><td>+3 (jazz)</td><td><audio controls preload="none" src="audio/jingle_bells_ap3p0.mp3?v=3"></audio></td></tr>
+</table>
+
+<h2>2. extreme examples</h2>
+<p>two classical melodies pushed to -10 and +10 on the jazz axis.</p>
+<table>
+<tr><th></th><th>Brahms</th><th>Elgar</th></tr>
+<tr><td>original</td><td><audio controls preload="none" src="audio/brahms_original.mp3?v=3"></audio></td><td><audio controls preload="none" src="audio/elgar_original.mp3?v=3"></audio></td></tr>
+<tr><td>-10</td><td><audio controls preload="none" src="audio/brahms_a-10.mp3?v=3"></audio></td><td><audio controls preload="none" src="audio/elgar_a-10.mp3?v=3"></audio></td></tr>
+<tr><td>+10</td><td><audio controls preload="none" src="audio/brahms_ap10.mp3?v=3"></audio></td><td><audio controls preload="none" src="audio/elgar_ap10.mp3?v=3"></audio></td></tr>
+</table>
+
+<h2>3. sub-axes</h2>
+<p>syncopation, chromaticism and blue notes (b3, b5, b7) as separate directions in the same latent space, no retraining. example: Brahms, Liebe und Frühling I, op. 3 no. 2 (vocal line).</p>
+<table>
+<tr><td>original</td><td><audio controls preload="none" src="audio/lf_orig.mp3?v=3"></audio></td></tr>
+<tr><td>jazz -6</td><td><audio controls preload="none" src="audio/lf_jazz_m6.mp3?v=3"></audio></td></tr>
+<tr><td>jazz +6</td><td><audio controls preload="none" src="audio/lf_jazz_p6.mp3?v=3"></audio></td></tr>
+<tr><td>syncopation +6</td><td><audio controls preload="none" src="audio/lf_sync_p6.mp3?v=3"></audio></td></tr>
+<tr><td>chromaticism +6</td><td><audio controls preload="none" src="audio/lf_chroma_p6.mp3?v=3"></audio></td></tr>
+<tr><td>blues +6</td><td><audio controls preload="none" src="audio/lf_blues_p6.mp3?v=3"></audio></td></tr>
+</table>
+<img src="subaxes.png?v=3" alt="piano rolls">
+
+</body>
+</html>

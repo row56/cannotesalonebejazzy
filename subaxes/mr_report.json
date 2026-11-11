@@ -1,0 +1,66 @@
+{
+ "orig": {
+  "lhl_syncopation": 1.95,
+  "syncopation": 0.68,
+  "chromaticism": 0.0,
+  "note_density": 0.3,
+  "blue": 0.0,
+  "notes": "G@0 E@3 C@4 F@8 E@11 D@12 C@15 D@19 E@23 A@27 B@31 C@35 E@39 G@43 F@48 G@51 F@60 C@61 C@63"
+ },
+ "jazz_m3": {
+  "lhl_syncopation": 0.12,
+  "syncopation": 0.35,
+  "chromaticism": 0.0,
+  "note_density": 0.27,
+  "blue": 0.0,
+  "notes": "G@0 F@3 E@4 E@8 E@11 F@12 E@16 F@24 G@28 A@31 B@32 C@36 C@40 C@59 G@60 C@61 C@63"
+ },
+ "jazz_p3": {
+  "lhl_syncopation": 0.81,
+  "syncopation": 0.75,
+  "chromaticism": 0.06,
+  "note_density": 0.25,
+  "blue": 0.06,
+  "notes": "F@2 G@3 E@5 E@11 F@13 Eb@16 B@19 A@22 E@26 C@29 A@32 B@35 C@40 C@58 D@60 C@62"
+ },
+ "sync_p6": {
+  "lhl_syncopation": 2.42,
+  "syncopation": 0.83,
+  "chromaticism": 0.0,
+  "note_density": 0.19,
+  "blue": 0.0,
+  "notes": "G@2 E@3 F@4 E@7 E@9 A@13 E@23 C@30 B@34 D@38 C@60 C@62"
+ },
+ "sync_m6": {
+  "lhl_syncopation": 0.0,
+  "syncopation": 0.32,
+  "chromaticism": 0.0,
+  "note_density": 0.3,
+  "blue": 0.0,
+  "notes": "G@0 F@4 E@7 E@8 F@12 E@15 F@16 E@20 F@24 A@28 B@31 C@32 C@36 D@40 D@48 C@58 G@59 F@60 C@63"
+ },
+ "chroma_p6": {
+  "lhl_syncopation": 1.26,
+  "syncopation": 0.79,
+  "chromaticism": 0.26,
+  "note_density": 0.3,
+  "blue": 0.21,
+  "notes": "E@2 Gb@3 E@6 F@8 E@11 Eb@14 E@17 Gb@20 E@23 A@28 B@31 B@34 Db@38 C@57 C@58 B@59 Ab@60 Bb@62 C@63"
+ },
+ "blues_p3": {
+  "lhl_syncopation": 1.71,
+  "syncopation": 0.59,
+  "chromaticism": 0.24,
+  "note_density": 0.27,
+  "blue": 0.35,
+  "notes": "G@0 F@3 F@4 Eb@7 E@8 Eb@11 Eb@13 Eb@16 E@20 Gb@27 C@30 Bb@32 B@35 C@39 C@57 G@60 C@61"
+ },
+ "blues_p6": {
+  "lhl_syncopation": 1.74,
+  "syncopation": 0.68,
+  "chromaticism": 0.11,
+  "note_density": 0.3,
+  "blue": 0.68,
+  "notes": "G@0 Bb@3 Eb@4 F@7 Eb@8 Eb@12 Gb@15 Eb@16 Bb@19 Bb@24 B@27 Db@31 Eb@35 Bb@39 Bb@43 C@51 C@59 Bb@62 Bb@63"
+ }
+}

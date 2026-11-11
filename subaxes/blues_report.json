@@ -1,0 +1,53 @@
+{
+ "blue_rate_jazz": 0.174,
+ "blue_rate_classical": 0.144,
+ "descriptor_auc": 0.572,
+ "axis_auc": 0.542,
+ "axis_auc_scores": 0.559,
+ "axis_auc_perf": 0.514,
+ "corr": {
+  "note_density": 0.14,
+  "lhl_syncopation": -0.02,
+  "chromaticism": 0.27,
+  "blue": 0.92
+ },
+ "cos_jazz": 0.1,
+ "steer_20": {
+  "blues": {
+   "blue": [
+    0.032,
+    0.401
+   ],
+   "chromaticism": [
+    0.068,
+    0.15
+   ],
+   "lhl_syncopation": [
+    0.301,
+    0.195
+   ],
+   "note_density": [
+    0.417,
+    0.425
+   ]
+  },
+  "jazz": {
+   "blue": [
+    0.115,
+    0.204
+   ],
+   "chromaticism": [
+    0.078,
+    0.123
+   ],
+   "lhl_syncopation": [
+    0.026,
+    0.785
+   ],
+   "note_density": [
+    0.418,
+    0.413
+   ]
+  }
+ }
+}

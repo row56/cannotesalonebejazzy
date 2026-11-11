@@ -1,0 +1,114 @@
+{
+ "brahms": {
+  "start_sd": -1.4073622226715088,
+  "original": {
+   "note_density": 0.5,
+   "pitch_range": 5.0,
+   "mean_interval": 2.067,
+   "rest_ratio": 0.094,
+   "syncopation": 0.562,
+   "chromaticism": 0.062,
+   "pc_entropy": 1.921,
+   "beat_vacancy": 0.125,
+   "lhl_syncopation": 0.0
+  },
+  "-10": {
+   "pos_sd": -11.41,
+   "notes": 15,
+   "mean_sync_all": 0.433,
+   "mean_chroma_all": 0.045
+  },
+  "-6": {
+   "pos_sd": -7.41,
+   "notes": 15,
+   "mean_sync_all": 0.469,
+   "mean_chroma_all": 0.062
+  },
+  "-3": {
+   "pos_sd": -4.41,
+   "notes": 16,
+   "mean_sync_all": 0.476,
+   "mean_chroma_all": 0.064
+  },
+  "0": {
+   "pos_sd": -1.41,
+   "notes": 16,
+   "mean_sync_all": 0.554,
+   "mean_chroma_all": 0.102
+  },
+  "3": {
+   "pos_sd": 1.59,
+   "notes": 16,
+   "mean_sync_all": 0.777,
+   "mean_chroma_all": 0.15
+  },
+  "6": {
+   "pos_sd": 4.59,
+   "notes": 16,
+   "mean_sync_all": 0.819,
+   "mean_chroma_all": 0.248
+  },
+  "10": {
+   "pos_sd": 8.59,
+   "notes": 15,
+   "mean_sync_all": 0.789,
+   "mean_chroma_all": 0.246
+  }
+ },
+ "elgar": {
+  "start_sd": -0.5624498724937439,
+  "original": {
+   "note_density": 0.656,
+   "pitch_range": 10.0,
+   "mean_interval": 1.9,
+   "rest_ratio": 0.0,
+   "syncopation": 0.619,
+   "chromaticism": 0.0,
+   "pc_entropy": 2.396,
+   "beat_vacancy": 0.0,
+   "lhl_syncopation": 0.095
+  },
+  "-10": {
+   "pos_sd": -10.56,
+   "notes": 15,
+   "mean_sync_all": 0.378,
+   "mean_chroma_all": 0.0
+  },
+  "-6": {
+   "pos_sd": -6.56,
+   "notes": 17,
+   "mean_sync_all": 0.389,
+   "mean_chroma_all": 0.0
+  },
+  "-3": {
+   "pos_sd": -3.56,
+   "notes": 18,
+   "mean_sync_all": 0.479,
+   "mean_chroma_all": 0.0
+  },
+  "0": {
+   "pos_sd": -0.56,
+   "notes": 21,
+   "mean_sync_all": 0.603,
+   "mean_chroma_all": 0.001
+  },
+  "3": {
+   "pos_sd": 2.44,
+   "notes": 21,
+   "mean_sync_all": 0.763,
+   "mean_chroma_all": 0.016
+  },
+  "6": {
+   "pos_sd": 5.44,
+   "notes": 21,
+   "mean_sync_all": 0.811,
+   "mean_chroma_all": 0.066
+  },
+  "10": {
+   "pos_sd": 9.44,
+   "notes": 21,
+   "mean_sync_all": 0.817,
+   "mean_chroma_all": 0.153
+  }
+ }
+}

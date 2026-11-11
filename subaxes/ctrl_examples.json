@@ -1,0 +1,88 @@
+{
+ "ode": {
+  "-3": {
+   "note_density": 0.23,
+   "pitch_range": 7.0,
+   "mean_interval": 1.43,
+   "rest_ratio": 0.0,
+   "syncopation": 0.2,
+   "chromaticism": 0.0,
+   "pc_entropy": 2.26,
+   "beat_vacancy": 0.25,
+   "lhl_syncopation": 0.0,
+   "notes": 15,
+   "onsets": "E@0 E@6 F@8 G@12 G@16 F@20 F@24 D@28 C@32 C@38 D@40 E@44 D@48 E@54 D@56"
+  },
+  "3": {
+   "note_density": 0.23,
+   "pitch_range": 7.0,
+   "mean_interval": 1.43,
+   "rest_ratio": 0.06,
+   "syncopation": 0.33,
+   "chromaticism": 0.0,
+   "pc_entropy": 1.97,
+   "beat_vacancy": 0.38,
+   "lhl_syncopation": 0.53,
+   "notes": 15,
+   "onsets": "E@0 E@4 E@8 F@12 G@16 E@20 D@24 C@28 D@34 C@38 E@42 E@46 D@50 D@56 D@60"
+  }
+ },
+ "classical": {
+  "-3": {
+   "note_density": 0.27,
+   "pitch_range": 8.0,
+   "mean_interval": 1.0,
+   "rest_ratio": 0.0,
+   "syncopation": 0.41,
+   "chromaticism": 0.06,
+   "pc_entropy": 2.54,
+   "beat_vacancy": 0.38,
+   "lhl_syncopation": 0.0,
+   "notes": 17,
+   "onsets": "Bb@0 A@6 G@8 F@12 E@14 E@16 F@24 G@28 Ab@30 G@32 G@38 G@40 E@46 D@48 D@54 D@56 D@62"
+  },
+  "3": {
+   "note_density": 0.27,
+   "pitch_range": 8.0,
+   "mean_interval": 1.0,
+   "rest_ratio": 0.06,
+   "syncopation": 0.18,
+   "chromaticism": 0.12,
+   "pc_entropy": 2.61,
+   "beat_vacancy": 0.12,
+   "lhl_syncopation": 0.0,
+   "notes": 17,
+   "onsets": "Bb@0 A@4 A@8 F@14 E@16 E@20 E@24 G@28 G@30 G@32 G@36 G@40 Eb@46 D@48 D@52 Eb@56 D@60"
+  },
+  "source": "lieder/Schumann,_Robert/Liederkreis,_Op.39/10_Zwielicht/lc4987672.mxl"
+ },
+ "jazz": {
+  "-3": {
+   "note_density": 0.3,
+   "pitch_range": 10.0,
+   "mean_interval": 2.28,
+   "rest_ratio": 0.25,
+   "syncopation": 0.47,
+   "chromaticism": 0.16,
+   "pc_entropy": 3.01,
+   "beat_vacancy": 0.38,
+   "lhl_syncopation": 0.11,
+   "notes": 19,
+   "onsets": "E@0 Gb@2 G@4 A@6 B@8 A@10 Ab@12 E@14 Gb@16 G@24 A@25 Ab@27 Bb@28 Gb@30 Gb@32 D@48 Db@50 B@52 G@62"
+  },
+  "3": {
+   "note_density": 0.22,
+   "pitch_range": 7.0,
+   "mean_interval": 2.31,
+   "rest_ratio": 0.55,
+   "syncopation": 0.57,
+   "chromaticism": 0.07,
+   "pc_entropy": 2.35,
+   "beat_vacancy": 0.62,
+   "lhl_syncopation": 0.0,
+   "notes": 14,
+   "onsets": "E@0 Gb@2 G@4 A@6 B@8 A@10 Gb@14 E@16 Gb@20 Gb@22 B@26 A@28 Gb@30 Bb@62"
+  },
+  "source": "pdmx_jazz/mid/2/39/QmcQaa3REeKw1cNAYThQhnfsZupEZtMVMNbtjhpLWJoKLA.mid"
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "orig": {
+  "note_density": 0.27,
+  "pitch_range": 8.0,
+  "mean_interval": 1.0,
+  "rest_ratio": 0.0,
+  "syncopation": 0.29,
+  "chromaticism": 0.12,
+  "pc_entropy": 2.75,
+  "beat_vacancy": 0.25,
+  "lhl_syncopation": 0.06
+ },
+ "jazz_p3": {
+  "lhl_syncopation": 0.35,
+  "syncopation": 0.41,
+  "chromaticism": 0.12,
+  "note_density": 0.27,
+  "blue": 0.12,
+  "notes": "A Bb A E F E G G E Ab A G D Eb D D D"
+ },
+ "sync_p6": {
+  "lhl_syncopation": 1.0,
+  "syncopation": 0.5,
+  "chromaticism": 0.12,
+  "note_density": 0.25,
+  "blue": 0.06,
+  "notes": "A Bb A G F E E E G Ab Ab F D D D D"
+ },
+ "sync_m6": {
+  "lhl_syncopation": 0.0,
+  "syncopation": 0.21,
+  "chromaticism": 0.11,
+  "note_density": 0.3,
+  "blue": 0.11,
+  "notes": "Bb A G G F E E E G G Ab G F F Eb D D D D"
+ },
+ "chroma_p6": {
+  "lhl_syncopation": 0.5,
+  "syncopation": 0.5,
+  "chromaticism": 0.25,
+  "note_density": 0.31,
+  "blue": 0.2,
+  "notes": "Bb A E E Eb E F E E G Ab Ab Ab Gb Eb D B Db D D"
+ },
+ "chroma_m6": {
+  "lhl_syncopation": 0.0,
+  "syncopation": 0.24,
+  "chromaticism": 0.0,
+  "note_density": 0.27,
+  "blue": 0.06,
+  "notes": "Bb A G F F F E G G G G F D D D C D"
+ },
+ "blues_p3": {
+  "lhl_syncopation": 0.18,
+  "syncopation": 0.29,
+  "chromaticism": 0.06,
+  "note_density": 0.27,
+  "blue": 0.41,
+  "notes": "Bb Bb G F Eb E Eb G Ab G Ab Eb Eb D Eb D D"
+ },
+ "blues_p6": {
+  "lhl_syncopation": 0.0,
+  "syncopation": 0.28,
+  "chromaticism": 0.0,
+  "note_density": 0.28,
+  "blue": 0.56,
+  "notes": "Bb Bb Bb Eb F Eb Ab Ab G Eb Ab Ab Eb Eb D Eb Eb F"
+ },
+ "blues_m6": {
+  "lhl_syncopation": 0.18,
+  "syncopation": 0.35,
+  "chromaticism": 0.0,
+  "note_density": 0.27,
+  "blue": 0.0,
+  "notes": "A A G E E E E E G G A G E D D D D"
+ }
+}

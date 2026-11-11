@@ -1,0 +1,55 @@
+{
+ "jazz (paper)": {
+  "corr": {
+   "note_density": 0.01,
+   "syncopation": 0.48,
+   "lhl_syncopation": 0.48,
+   "chromaticism": 0.27
+  },
+  "genre_auc": 0.831,
+  "auc_scores": 0.79,
+  "auc_performances": 0.894,
+  "sd": 1.034646987915039,
+  "cos_with_jazz": 1.0
+ },
+ "syncopation": {
+  "corr": {
+   "note_density": -0.13,
+   "syncopation": 0.41,
+   "lhl_syncopation": 0.76,
+   "chromaticism": 0.15
+  },
+  "genre_auc": 0.806,
+  "auc_scores": 0.754,
+  "auc_performances": 0.888,
+  "sd": 0.4467910942192267,
+  "cos_with_jazz": 0.28
+ },
+ "chromaticism": {
+  "corr": {
+   "note_density": 0.31,
+   "syncopation": 0.51,
+   "lhl_syncopation": 0.27,
+   "chromaticism": 0.72
+  },
+  "genre_auc": 0.668,
+  "auc_scores": 0.639,
+  "auc_performances": 0.746,
+  "sd": 0.46430816763457355,
+  "cos_with_jazz": 0.23
+ },
+ "jazz minus sync/chroma/density": {
+  "corr": {
+   "note_density": 0.01,
+   "syncopation": 0.45,
+   "lhl_syncopation": 0.41,
+   "chromaticism": 0.21
+  },
+  "genre_auc": 0.812,
+  "auc_scores": 0.773,
+  "auc_performances": 0.861,
+  "sd": 0.9754466310371618,
+  "cos_with_jazz": 0.93
+ },
+ "_descriptor_trio_auc": 0.848
+}

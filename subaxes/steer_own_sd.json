@@ -1,0 +1,83 @@
+{
+ "sd": {
+  "syncopation": 0.4467910942192267,
+  "chromaticism": 0.46430816763457355,
+  "jazz": 1.034646987915039,
+  "jazz_residual": 0.9754466310371618
+ },
+ "n": 20,
+ "means_minus3_plus3": {
+  "syncopation": {
+   "lhl_syncopation": [
+    0.212,
+    0.367
+   ],
+   "syncopation": [
+    0.499,
+    0.537
+   ],
+   "chromaticism": [
+    0.106,
+    0.097
+   ],
+   "note_density": [
+    0.425,
+    0.417
+   ]
+  },
+  "chromaticism": {
+   "lhl_syncopation": [
+    0.15,
+    0.47
+   ],
+   "syncopation": [
+    0.496,
+    0.555
+   ],
+   "chromaticism": [
+    0.082,
+    0.108
+   ],
+   "note_density": [
+    0.416,
+    0.421
+   ]
+  },
+  "jazz": {
+   "lhl_syncopation": [
+    0.026,
+    0.785
+   ],
+   "syncopation": [
+    0.417,
+    0.68
+   ],
+   "chromaticism": [
+    0.078,
+    0.123
+   ],
+   "note_density": [
+    0.418,
+    0.413
+   ]
+  },
+  "jazz_residual": {
+   "lhl_syncopation": [
+    0.06,
+    0.732
+   ],
+   "syncopation": [
+    0.423,
+    0.656
+   ],
+   "chromaticism": [
+    0.095,
+    0.11
+   ],
+   "note_density": [
+    0.417,
+    0.416
+   ]
+  }
+ }
+}

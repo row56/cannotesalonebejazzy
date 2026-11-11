@@ -1,0 +1,634 @@
+{
+  "sigma": 1.156734824180603,
+  "targets_sd": {
+    "classical": -0.6669471355128798,
+    "jazz": 0.6669471870412366
+  },
+  "bpm": 80,
+  "bars": 2,
+  "temperature": 0.9,
+  "top_p": 0.98,
+  "candidates": 200,
+  "seeds": [
+    {
+      "id": "seed00",
+      "index": 5241,
+      "side": "classical",
+      "source_file": "lieder/Lehmann,_Liza/Songs_of_a_\u201cFlapper\u201d/3_My_sister_Nell/lc6753345.mxl",
+      "start_sd": -1.0309302568843173,
+      "clips": {
+        "jazz": {
+          "file": "seed00/jazz.mid",
+          "shift_sd": 1.697877443925554,
+          "descriptors": {
+            "note_density": 0.2812,
+            "pitch_range": 10.0,
+            "mean_interval": 2.25,
+            "rest_ratio": 0.0,
+            "syncopation": 0.1111,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.4194,
+            "beat_vacancy": 0.0,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 9,
+        "achieved": [
+          9
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed01",
+      "index": 5790,
+      "side": "classical",
+      "source_file": "lieder/Somervell,_Arthur/A_Shropshire_Lad/04_In_Summer-time_on_Bredon/lc6211877.mxl",
+      "start_sd": -1.8536784805730366,
+      "clips": {
+        "jazz": {
+          "file": "seed01/jazz.mid",
+          "shift_sd": 2.520625667614273,
+          "descriptors": {
+            "note_density": 0.3125,
+            "pitch_range": 8.0,
+            "mean_interval": 1.5556,
+            "rest_ratio": 0.0,
+            "syncopation": 0.5,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.5219,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.5
+          }
+        }
+      },
+      "notes": {
+        "target": 10,
+        "achieved": [
+          10
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed02",
+      "index": 4524,
+      "side": "classical",
+      "source_file": "lieder/Elgar,_Edward/2_Songs,_Op.60/1_The_Torch/lc6233544.mxl",
+      "start_sd": -0.5624496374722455,
+      "clips": {
+        "jazz": {
+          "file": "seed02/jazz.mid",
+          "shift_sd": 1.229396824513482,
+          "descriptors": {
+            "note_density": 0.6562,
+            "pitch_range": 8.0,
+            "mean_interval": 2.15,
+            "rest_ratio": 0.0,
+            "syncopation": 0.6667,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.3671,
+            "beat_vacancy": 0.125,
+            "lhl_syncopation": 0.2857
+          }
+        }
+      },
+      "notes": {
+        "target": 21,
+        "achieved": [
+          21
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed03",
+      "index": 4402,
+      "side": "classical",
+      "source_file": "lieder/Chaminade,_C\u00e9cile/_/Rosemonde/lc5000347.mxl",
+      "start_sd": -1.053698679688913,
+      "clips": {
+        "jazz": {
+          "file": "seed03/jazz.mid",
+          "shift_sd": 1.7206458667301496,
+          "descriptors": {
+            "note_density": 0.2188,
+            "pitch_range": 7.0,
+            "mean_interval": 1.8333,
+            "rest_ratio": 0.0,
+            "syncopation": 0.2857,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.2359,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.5714
+          }
+        }
+      },
+      "notes": {
+        "target": 7,
+        "achieved": [
+          7
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed04",
+      "index": 5521,
+      "side": "classical",
+      "source_file": "lieder/Satie,_Erik/_/La_diva_de_\u201cL\u2019Empire\u201d/lc6987705.mxl",
+      "start_sd": -1.1893244065607964,
+      "clips": {
+        "jazz": {
+          "file": "seed04/jazz.mid",
+          "shift_sd": 1.856271593602033,
+          "descriptors": {
+            "note_density": 0.5625,
+            "pitch_range": 10.0,
+            "mean_interval": 3.0588,
+            "rest_ratio": 0.0625,
+            "syncopation": 0.7222,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.3276,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.6667
+          }
+        }
+      },
+      "notes": {
+        "target": 18,
+        "achieved": [
+          18
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed05",
+      "index": 7232,
+      "side": "classical",
+      "source_file": "asap/Beethoven/Piano_Sonatas/32-1_no_repeat/FALIKS01_2004.mid",
+      "start_sd": -0.7375757144793137,
+      "clips": {
+        "jazz": {
+          "file": "seed05/jazz.mid",
+          "shift_sd": 1.4045229015205503,
+          "descriptors": {
+            "note_density": 0.4375,
+            "pitch_range": 8.0,
+            "mean_interval": 2.3077,
+            "rest_ratio": 0.5,
+            "syncopation": 0.5,
+            "chromaticism": 0.0714,
+            "pc_entropy": 2.6106,
+            "beat_vacancy": 0.125,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 14,
+        "achieved": [
+          14
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed06",
+      "index": 7187,
+      "side": "classical",
+      "source_file": "asap/Beethoven/Piano_Sonatas/32-1/Jussow02.mid",
+      "start_sd": -0.523525528951465,
+      "clips": {
+        "jazz": {
+          "file": "seed06/jazz.mid",
+          "shift_sd": 1.1904727159927015,
+          "descriptors": {
+            "note_density": 0.6562,
+            "pitch_range": 10.0,
+            "mean_interval": 1.95,
+            "rest_ratio": 0.3125,
+            "syncopation": 0.619,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.5042,
+            "beat_vacancy": 0.0,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 21,
+        "achieved": [
+          21
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed07",
+      "index": 5572,
+      "side": "classical",
+      "source_file": "lieder/Schubert,_Franz/Die_sch\u00f6ne_M\u00fcllerin,_D.795/15_Eifersucht_und_Stolz/lc5026236.mxl",
+      "start_sd": -0.749983124463139,
+      "clips": {
+        "jazz": {
+          "file": "seed07/jazz.mid",
+          "shift_sd": 1.4169303115043754,
+          "descriptors": {
+            "note_density": 0.25,
+            "pitch_range": 7.0,
+            "mean_interval": 1.5714,
+            "rest_ratio": 0.1875,
+            "syncopation": 0.5,
+            "chromaticism": 0.0,
+            "pc_entropy": 1.5,
+            "beat_vacancy": 0.5,
+            "lhl_syncopation": 0.125
+          }
+        }
+      },
+      "notes": {
+        "target": 8,
+        "achieved": [
+          8
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed08",
+      "index": 4943,
+      "side": "classical",
+      "source_file": "lieder/Holm\u00e8s,_Augusta_Mary_Anne/M\u00e9lodies_pour_piano_et_chant/04_Chanson_des_gars_d\u2019Irlande/lc5989993.mxl",
+      "start_sd": -1.390936110505653,
+      "clips": {
+        "jazz": {
+          "file": "seed08/jazz.mid",
+          "shift_sd": 2.0578832975468897,
+          "descriptors": {
+            "note_density": 0.2812,
+            "pitch_range": 7.0,
+            "mean_interval": 1.375,
+            "rest_ratio": 0.0625,
+            "syncopation": 0.4444,
+            "chromaticism": 0.0,
+            "pc_entropy": 1.6577,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.4444
+          }
+        }
+      },
+      "notes": {
+        "target": 9,
+        "achieved": [
+          9
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed09",
+      "index": 4289,
+      "side": "classical",
+      "source_file": "lieder/Browne,_Augusta/_/The_Reply_of_the_Messenger_Bird/lc6588799.mxl",
+      "start_sd": -1.9477960548859445,
+      "clips": {
+        "jazz": {
+          "file": "seed09/jazz.mid",
+          "shift_sd": 2.614743241927181,
+          "descriptors": {
+            "note_density": 0.375,
+            "pitch_range": 10.0,
+            "mean_interval": 2.0909,
+            "rest_ratio": 0.0625,
+            "syncopation": 0.5,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.6887,
+            "beat_vacancy": 0.25,
+            "lhl_syncopation": 0.0833
+          }
+        }
+      },
+      "notes": {
+        "target": 12,
+        "achieved": [
+          12
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed10",
+      "index": 3030,
+      "side": "jazz",
+      "source_file": "jtd/jarrettk-ifishouldloseyou-peacockgdejohnettej-1983-5a9ff1b2",
+      "start_sd": 1.7703627957019168,
+      "clips": {
+        "classical": {
+          "file": "seed10/classical.mid",
+          "shift_sd": -2.4373099312147963,
+          "descriptors": {
+            "note_density": 0.375,
+            "pitch_range": 9.0,
+            "mean_interval": 3.3636,
+            "rest_ratio": 0.0,
+            "syncopation": 0.4167,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.4591,
+            "beat_vacancy": 0.125,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 12,
+        "achieved": [
+          12
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed11",
+      "index": 946,
+      "side": "jazz",
+      "source_file": "pdmx_jazz/mid/12/48/QmUvarTxSWVZ6hMXqszy3fxLuZFm38FVTYUCapAoPRTD94.mid",
+      "start_sd": 0.4908030642883238,
+      "clips": {
+        "classical": {
+          "file": "seed11/classical.mid",
+          "shift_sd": -1.1577501998012036,
+          "descriptors": {
+            "note_density": 0.2188,
+            "pitch_range": 7.0,
+            "mean_interval": 3.5,
+            "rest_ratio": 0.3125,
+            "syncopation": 0.4286,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.2359,
+            "beat_vacancy": 0.5,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 7,
+        "achieved": [
+          7
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed12",
+      "index": 1686,
+      "side": "jazz",
+      "source_file": "pdmx_jazz/mid/13/54/QmVyW3k6C1DGz3e5Pv9Hn9ddfZrdAELRFgvHx7DX9E1RcB.mid",
+      "start_sd": 1.2792722031824943,
+      "clips": {
+        "classical": {
+          "file": "seed12/classical.mid",
+          "shift_sd": -1.9462193386953741,
+          "descriptors": {
+            "note_density": 0.3438,
+            "pitch_range": 6.0,
+            "mean_interval": 1.8,
+            "rest_ratio": 0.125,
+            "syncopation": 0.4545,
+            "chromaticism": 0.0,
+            "pc_entropy": 1.7899,
+            "beat_vacancy": 0.25,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 11,
+        "achieved": [
+          11
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed13",
+      "index": 2777,
+      "side": "jazz",
+      "source_file": "jtd/jarrettk-allthethingsyouare-peacockgdejohnettej-1989-c82aab89",
+      "start_sd": 1.8998210935450943,
+      "clips": {
+        "classical": {
+          "file": "seed13/classical.mid",
+          "shift_sd": -2.566768229057974,
+          "descriptors": {
+            "note_density": 0.3125,
+            "pitch_range": 5.0,
+            "mean_interval": 1.5556,
+            "rest_ratio": 0.0625,
+            "syncopation": 0.4,
+            "chromaticism": 0.0,
+            "pc_entropy": 1.971,
+            "beat_vacancy": 0.25,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 10,
+        "achieved": [
+          10
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed14",
+      "index": 557,
+      "side": "jazz",
+      "source_file": "pdmx_jazz/mid/7/19/QmPfTzyzFgdyQE8TQtWN8XVPZZWWribrNc2RkAzARQBMSf.mid",
+      "start_sd": 0.5979948255224073,
+      "clips": {
+        "classical": {
+          "file": "seed14/classical.mid",
+          "shift_sd": -1.2649419610352872,
+          "descriptors": {
+            "note_density": 0.2812,
+            "pitch_range": 5.0,
+            "mean_interval": 2.125,
+            "rest_ratio": 0.0625,
+            "syncopation": 0.4444,
+            "chromaticism": 0.0,
+            "pc_entropy": 1.3516,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.6667
+          }
+        }
+      },
+      "notes": {
+        "target": 9,
+        "achieved": [
+          9
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed15",
+      "index": 822,
+      "side": "jazz",
+      "source_file": "pdmx_jazz/mid/16/31/QmYmx8JgRFT2uXegNmooCtnrDtPrczMxJbMvw8WA8bjb3L.mid",
+      "start_sd": 0.81781175557627,
+      "clips": {
+        "classical": {
+          "file": "seed15/classical.mid",
+          "shift_sd": -1.4847588910891498,
+          "descriptors": {
+            "note_density": 0.2812,
+            "pitch_range": 9.0,
+            "mean_interval": 1.375,
+            "rest_ratio": 0.1875,
+            "syncopation": 0.4444,
+            "chromaticism": 0.1111,
+            "pc_entropy": 2.7255,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 9,
+        "achieved": [
+          9
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed16",
+      "index": 1327,
+      "side": "jazz",
+      "source_file": "pdmx_jazz/mid/8/35/QmQoHwZma3MvXVKj9Hb75vrVAt1NfRb3kV6v5Wyo55qCX6.mid",
+      "start_sd": 1.3453708212434927,
+      "clips": {
+        "classical": {
+          "file": "seed16/classical.mid",
+          "shift_sd": -2.0123179567563723,
+          "descriptors": {
+            "note_density": 0.2812,
+            "pitch_range": 8.0,
+            "mean_interval": 2.125,
+            "rest_ratio": 0.0,
+            "syncopation": 0.4444,
+            "chromaticism": 0.0,
+            "pc_entropy": 2.1133,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.2222
+          }
+        }
+      },
+      "notes": {
+        "target": 9,
+        "achieved": [
+          9
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed17",
+      "index": 470,
+      "side": "jazz",
+      "source_file": "pdmx_jazz/mid/7/28/QmPk9mpmRNqfMZzWfZTgQZg28kT4PieJ9Az2i3YihtYUqG.mid",
+      "start_sd": 1.5634573775467246,
+      "clips": {
+        "classical": {
+          "file": "seed17/classical.mid",
+          "shift_sd": -2.230404513059604,
+          "descriptors": {
+            "note_density": 0.5312,
+            "pitch_range": 5.0,
+            "mean_interval": 1.25,
+            "rest_ratio": 0.1875,
+            "syncopation": 0.5882,
+            "chromaticism": 0.0,
+            "pc_entropy": 1.2533,
+            "beat_vacancy": 0.125,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 17,
+        "achieved": [
+          17
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed18",
+      "index": 492,
+      "side": "jazz",
+      "source_file": "pdmx_jazz/mid/7/42/QmPshrFTPBrhDACMRy8hhh9hg2N76AFAS65BQGuycXgx9c.mid",
+      "start_sd": 1.6948444848426762,
+      "clips": {
+        "classical": {
+          "file": "seed18/classical.mid",
+          "shift_sd": -2.361791620355556,
+          "descriptors": {
+            "note_density": 0.3125,
+            "pitch_range": 5.0,
+            "mean_interval": 1.5556,
+            "rest_ratio": 0.0,
+            "syncopation": 0.4,
+            "chromaticism": 0.1,
+            "pc_entropy": 2.2464,
+            "beat_vacancy": 0.25,
+            "lhl_syncopation": 0.0
+          }
+        }
+      },
+      "notes": {
+        "target": 10,
+        "achieved": [
+          10
+        ]
+      },
+      "density_matched": true
+    },
+    {
+      "id": "seed19",
+      "index": 2681,
+      "side": "jazz",
+      "source_file": "jtd/jamala-itcouldhappentoyou-crosbyifournierv-1958-428c7e1e",
+      "start_sd": 0.9585279172908039,
+      "clips": {
+        "classical": {
+          "file": "seed19/classical.mid",
+          "shift_sd": -1.6254750528036837,
+          "descriptors": {
+            "note_density": 0.4375,
+            "pitch_range": 9.0,
+            "mean_interval": 2.3077,
+            "rest_ratio": 0.0,
+            "syncopation": 0.6429,
+            "chromaticism": 0.0,
+            "pc_entropy": 1.8774,
+            "beat_vacancy": 0.375,
+            "lhl_syncopation": 0.1429
+          }
+        }
+      },
+      "notes": {
+        "target": 14,
+        "achieved": [
+          14
+        ]
+      },
+      "density_matched": true
+    }
+  ]
+}

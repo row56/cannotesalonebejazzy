@@ -1,0 +1,90 @@
+{
+ "n_matched_per_genre": 1424,
+ "cos_with_paper_axis": 0.54,
+ "auc_all": 0.742,
+ "auc_matched": 0.762,
+ "corr": {
+  "lhl_syncopation": 0.03,
+  "syncopation": 0.04,
+  "chromaticism": 0.01,
+  "note_density": -0.16
+ },
+ "steer_20": {
+  "paper axis": {
+   "lhl_syncopation": [
+    0.026,
+    0.879
+   ],
+   "syncopation": [
+    0.417,
+    0.684
+   ],
+   "chromaticism": [
+    0.078,
+    0.105
+   ],
+   "note_density": [
+    0.418,
+    0.416
+   ],
+   "rest_ratio": [
+    0.115,
+    0.207
+   ],
+   "beat_vacancy": [
+    0.237,
+    0.5
+   ],
+   "mean_interval": [
+    1.991,
+    2.237
+   ],
+   "pitch_range": [
+    8.85,
+    9.3
+   ],
+   "pc_entropy": [
+    2.512,
+    2.606
+   ]
+  },
+  "matched axis": {
+   "lhl_syncopation": [
+    0.327,
+    0.318
+   ],
+   "syncopation": [
+    0.522,
+    0.589
+   ],
+   "chromaticism": [
+    0.118,
+    0.09
+   ],
+   "note_density": [
+    0.412,
+    0.396
+   ],
+   "rest_ratio": [
+    0.078,
+    0.283
+   ],
+   "beat_vacancy": [
+    0.359,
+    0.434
+   ],
+   "mean_interval": [
+    2.043,
+    2.086
+   ],
+   "pitch_range": [
+    8.55,
+    8.85
+   ],
+   "pc_entropy": [
+    2.561,
+    2.574
+   ]
+  }
+ }
+}
